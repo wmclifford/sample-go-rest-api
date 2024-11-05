@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: "postgres:15-alpine"
+    container_name: go_rest_api_db
+    environment:
+      POSTGRES_DB: sample_db
+      POSTGRES_PASSWORD: its_a_secret
+      POSTGRES_USER: sample_user
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - internal
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go_rest_api_app
+    environment:
+      APP_DATABASE_HOST: postgres
+      APP_DATABASE_USER: sample_user
+      APP_DATABASE_PASSWORD: its_a_secret
+      APP_DATABASE_DBNAME: sample_db
+      APP_DATABASE_PORT: 5432
+      GIN_MODE: release
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - internal
+
+volumes:
+  db_data:
+
+networks:
+  internal:
+    driver: bridge

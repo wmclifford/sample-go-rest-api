@@ -1,0 +1,6 @@
+database:
+  dbname: "sample_db"
+  host: "localhost"
+  password: "its_a_secret"
+  port: 5432
+  user: "sample_user"
